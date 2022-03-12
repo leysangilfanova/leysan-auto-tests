@@ -1,29 +1,27 @@
 import org.junit.jupiter.api.Test;
 
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Selenide.open;
 
 public class ProfileTest {
+
     @Test
     public void shouldAuthTest() {
-
         /**
          * Я не хочу свои логин и пароль палить, проверила все работает))
          */
-            /*open("https://github.com/");
-            $("[href='/login']")
-            .click();
-            $("#login_field")
-            .sendKeys("testLogin");
-            $("#password")
-            .sendKeys("testPassword");
-            $(".js-sign-in-button")
-            .click();*/
+        /*TestPages.page.loginInput()
+                .sendKeys("testLogin");
+
+        TestPages.page.passwordInput()
+                .sendKeys("testPassword");
+
+        TestPages.page.authButton()
+                .click();*/
 
         open("https://github.com/leysangilfanova");
-        $(".p-nickname")
+        TestPages.page.userNickname()
                 .shouldBe(visible)
                 .shouldHave(text("leysangilfanova"));
     }
