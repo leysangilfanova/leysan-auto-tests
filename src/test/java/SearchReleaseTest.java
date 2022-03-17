@@ -1,3 +1,6 @@
+import io.qameta.allure.Feature;
+import io.qameta.allure.Owner;
+import io.qameta.allure.Story;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -9,30 +12,41 @@ import static com.codeborne.selenide.CollectionCondition.sizeGreaterThanOrEqual;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.open;
+import static io.qameta.allure.Allure.step;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
+@Owner("lissamissa")
+@Feature("Releases")
 public class SearchReleaseTest {
 
+    @Story("Поиск релизов")
     @MethodSource("releasesSearch")
     @ParameterizedTest(name = "{displayName} по {0}")
     @DisplayName("Поиск релиза по")
     void changeBranchTest(String type, String searchData) {
 
-        open("https://github.com/junit-team/junit4");
+        step("Открыть страницу репозитория", () -> {
+            open("https://github.com/junit-team/junit4");
+        });
 
-        TestPages.page7dz.releasesButton()
-                .click();
+        step("Нажать на кнопку 'Releases'", () -> {
+            TestPages.page7dz.releasesButton()
+                    .click();
+        });
 
-        TestPages.page7dz.releaseNameInput()
-                .sendKeys(searchData);
+        step("Ввести в строку поиска название релиза и нажать Enter", () -> {
+            TestPages.page7dz.releaseNameInput()
+                    .sendKeys(searchData);
+            TestPages.page7dz.releaseNameInput()
+                    .pressEnter();
 
-        TestPages.page7dz.releaseNameInput()
-                .pressEnter();
-
-        TestPages.page7dz.releasesList()
-                .filter(text(searchData))
-                .shouldHave(sizeGreaterThanOrEqual(1)).first()
-                .shouldBe(visible);
+            step("В результатах поиска отображаются релизы соответствующие поисковому запросу", () -> {
+                TestPages.page7dz.releasesList()
+                        .filter(text(searchData))
+                        .shouldHave(sizeGreaterThanOrEqual(1)).first()
+                        .shouldBe(visible);
+            });
+        });
     }
 
     static Stream<Arguments> releasesSearch() {
